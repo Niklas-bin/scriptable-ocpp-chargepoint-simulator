@@ -4,8 +4,8 @@ if(!process.env.WS_CONNECT_URL) {
 let cp, heartbeatTimer;
 try {
   // WebSocket Connect (no OCPP)
-  cp = await connect(process.env.WS_CONNECT_URL);
-  // start a web-listener and wait for GET on /stop
+  cp = await connect('ws://localhost:8080');
+  // start a web-listene r and wait for GET on /stop
   const webserver = cp.startListener(8080, '0.0.0.0', {'admin': 'secret'});
   webserver.get('/stop', (req, res) => {
     res.send('stopped.');
@@ -13,7 +13,7 @@ try {
   });
   // typical startup OCPP
   const bootResp = await cp.sendBootnotification(
-    {chargePointVendor: "vendor", chargePointModel: "1"});
+    {chargePointVendor: "Test", chargePointModel: "1"});
   await cp.sendHeartbeat();
   heartbeatTimer = setInterval(() => cp.sendHeartbeat(),
     bootResp.interval > 0 ? bootResp.interval * 1000 : 60000);
@@ -47,7 +47,7 @@ try {
   cp.answerReset(async (request) => {
     cp.sendResponse(request.uniqueId, {status: "Accepted"});
     cp.log("RESET ***boing-boing-boing*** " + request.payload.type);
-    await cp.sendBootnotification({chargePointVendor: "vendor", chargePointModel: "1"});
+    await cp.sendBootnotification({chargePointVendor: "vendor", chargePointModel: "2"});
   });
   // Typical charging session
   let meterCount = 1377;

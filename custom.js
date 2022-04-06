@@ -1,10 +1,11 @@
 if(!process.env.WS_CONNECT_URL) {
   throw new Error("env variable WS_CONNECT_URL not set!");
 }
-let cp, heartbeatTimer;
+let cp; 
+let heartbeatTimer;
 try {
   // WebSocket Connect (no OCPP)
-  cp = await connect('ws://localhost:8080');
+  cp = await connect('ws://localhost:8100/xyz');
   // start a web-listene r and wait for GET on /stop
   const webserver = cp.startListener(8080, '0.0.0.0', {'admin': 'secret'});
   webserver.get('/stop', (req, res) => {
